@@ -567,41 +567,14 @@ int QPdfEnginePrivate::addImage(const QImage &img, bool *bitmap, qint64 serial_n
         bool hasAlpha = false;
         bool hasMask = false;
 
-        if (QImageWriter::supportedImageFormats().contains("jpeg") && colorMode != QPrinter::GrayScale) {
-            QBuffer buffer(&imageData);
-            QImageWriter writer(&buffer, "jpeg");
-            writer.setQuality(94);
-            writer.write(image);
-            dct = true;
-
-            if (format != QImage::Format_RGB32) {
-                softMaskData.resize(w * h);
-                uchar *sdata = (uchar *)softMaskData.data();
-                for (int y = 0; y < h; ++y) {
-                    const QRgb *rgb = (const QRgb *)image.scanLine(y);
-                    for (int x = 0; x < w; ++x) {
-                        uchar alpha = qAlpha(*rgb);
-                        *sdata++ = alpha;
-                        hasMask |= (alpha < 255);
-                        hasAlpha |= (alpha != 0 && alpha != 255);
-                        ++rgb;
-                    }
-                }
-            }
-        } else {
+        {
             imageData.resize(colorMode == QPrinter::GrayScale ? w * h : 3 * w * h);
             uchar *data = (uchar *)imageData.data();
-            softMaskData.resize(w * h);
-            uchar *sdata = (uchar *)softMaskData.data();
             for (int y = 0; y < h; ++y) {
                 const QRgb *rgb = (const QRgb *)image.scanLine(y);
                 if (colorMode == QPrinter::GrayScale) {
                     for (int x = 0; x < w; ++x) {
                         *(data++) = qGray(*rgb);
-                        uchar alpha = qAlpha(*rgb);
-                        *sdata++ = alpha;
-                        hasMask |= (alpha < 255);
-                        hasAlpha |= (alpha != 0 && alpha != 255);
                         ++rgb;
                     }
                 } else {
@@ -609,17 +582,45 @@ int QPdfEnginePrivate::addImage(const QImage &img, bool *bitmap, qint64 serial_n
                         *(data++) = qRed(*rgb);
                         *(data++) = qGreen(*rgb);
                         *(data++) = qBlue(*rgb);
-                        uchar alpha = qAlpha(*rgb);
-                        *sdata++ = alpha;
-                        hasMask |= (alpha < 255);
-                        hasAlpha |= (alpha != 0 && alpha != 255);
                         ++rgb;
                     }
                 }
             }
-            if (format == QImage::Format_RGB32)
-                hasAlpha = hasMask = false;
         }
+        
+        if (QImageWriter::supportedImageFormats().contains("jpeg") && colorMode != QPrinter::GrayScale) {
+            QByteArray imageData2;
+            QBuffer buffer(&imageData2);
+            QImageWriter writer(&buffer, "jpeg");
+            writer.setQuality(94);
+            writer.write(image);
+
+            int len = imageData.size();
+            uLongf destLen = len + len/100 + 13; // zlib requirement
+            Bytef* dest = new Bytef[destLen];
+            if (Z_OK == ::compress(dest, &destLen, (const Bytef*) imageData.constData(), (uLongf)len) &&
+                destLen > imageData2.size()) {
+                dct = true;
+                imageData = imageData2;
+            }
+            delete[] dest;
+        }
+        
+        if (format != QImage::Format_RGB32) {
+            softMaskData.resize(w * h);
+            uchar *sdata = (uchar *)softMaskData.data();
+            for (int y = 0; y < h; ++y) {
+                const QRgb *rgb = (const QRgb *)image.scanLine(y);
+                for (int x = 0; x < w; ++x) {
+                    uchar alpha = qAlpha(*rgb);
+                    *sdata++ = alpha;
+                    hasMask |= (alpha < 255);
+                    hasAlpha |= (alpha != 0 && alpha != 255);
+                    ++rgb;
+                }
+            }
+        }
+
         int maskObject = 0;
         int softMaskObject = 0;
         if (hasAlpha) {
