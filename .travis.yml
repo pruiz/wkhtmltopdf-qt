@@ -1,4 +1,6 @@
 language: cpp
 compiler: gcc
-install: perl libxinerama libssl-dev
+before_install: 
+        - sudo apt-get update -qq
+        - sudo apt-get install perl libxinerama libssl-dev
 script: ci-build.sh
