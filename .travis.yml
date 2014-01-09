@@ -1,0 +1,4 @@
+language: cpp
+compiler: gcc
+install: perl libxinerama libssl-dev
+script: ci-build.sh
