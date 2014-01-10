@@ -8,6 +8,7 @@ before_install:
         - sudo apt-get install libqt4-dev qt4-dev-tools
 script: sh -x ./ci-build.sh
 after_failure:
+        - uname -a
         - ls -l
         - cd  config.tests/x11/xlib/
         - make
