@@ -3830,7 +3830,6 @@ void qInitImageConversions()
         extern bool convert_ARGB_to_ARGB_PM_inplace_sse2(QImageData *data, Qt::ImageConversionFlags);
         inplace_converter_map[QImage::Format_ARGB32][QImage::Format_ARGB32_Premultiplied] = convert_ARGB_to_ARGB_PM_inplace_sse2;
     }
-#endif
 #ifdef QT_HAVE_SSSE3
     if (features & SSSE3) {
         extern void convert_RGB888_to_RGB32_ssse3(QImageData *dest, const QImageData *src, Qt::ImageConversionFlags);
@@ -3838,6 +3837,7 @@ void qInitImageConversions()
         converter_map[QImage::Format_RGB888][QImage::Format_ARGB32] = convert_RGB888_to_RGB32_ssse3;
         converter_map[QImage::Format_RGB888][QImage::Format_ARGB32_Premultiplied] = convert_RGB888_to_RGB32_ssse3;
     }
+#endif
 #endif
 #ifdef QT_HAVE_NEON
     if (features & NEON) {

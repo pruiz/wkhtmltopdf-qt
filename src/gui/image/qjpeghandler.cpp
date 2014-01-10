@@ -805,6 +805,7 @@ QJpegHandler::QJpegHandler()
     if (features & NEON)
         rgb888ToRgb32ConverterPtr = qt_convert_rgb888_to_rgb32_neon;
 #endif // QT_HAVE_NEON
+#if defined(QT_HAVE_SSE2)
 #if defined(QT_HAVE_SSSE3)
     // from qimage_ssse3.cpp
     Q_GUI_EXPORT void QT_FASTCALL qt_convert_rgb888_to_rgb32_ssse3(quint32 *dst, const uchar *src, int len);
@@ -812,6 +813,7 @@ QJpegHandler::QJpegHandler()
     if (features & SSSE3)
         rgb888ToRgb32ConverterPtr = qt_convert_rgb888_to_rgb32_ssse3;
 #endif // QT_HAVE_SSSE3
+#endif // QT_HAVE_SSE2
 }
 
 QJpegHandler::~QJpegHandler()

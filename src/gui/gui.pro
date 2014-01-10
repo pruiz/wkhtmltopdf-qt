@@ -179,7 +179,7 @@ contains(QMAKE_MAC_XARCH, no) {
             silent:sse2_compiler.commands = @echo compiling[sse2] ${QMAKE_FILE_IN} && $$sse2_compiler.commands
             QMAKE_EXTRA_COMPILERS += sse2_compiler
         }
-        ssse3 {
+        sse2:ssse3 {
             ssse3_compiler.commands = $$QMAKE_CXX -c -Winline
 
             mac {
@@ -216,7 +216,7 @@ contains(QMAKE_MAC_XARCH, no) {
         3dnow:sse: SOURCES += $$SSE3DNOW_SOURCES
         sse: SOURCES += $$SSE_SOURCES
         sse2: SOURCES += $$SSE2_SOURCES
-        ssse3: SOURCES += $$SSSE3_SOURCES
+        sse2:ssse3: SOURCES += $$SSSE3_SOURCES
         iwmmxt: SOURCES += $$IWMMXT_SOURCES
     }
 }

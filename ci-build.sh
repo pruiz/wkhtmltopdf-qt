@@ -50,6 +50,7 @@ sed -i s/OPT_CONFIRM_LICENSE=no/OPT_CONFIRM_LICENSE=yes/g configure
 -no-3dnow \
 -no-sse \
 -no-sse2 \
+-no-ssse3 \
 -no-neon \
 -openssl \
 -debug
