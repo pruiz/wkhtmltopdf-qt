@@ -9,4 +9,5 @@ before_install:
 script: ./ci-build.sh
 after_failure:
         - ls -l
-        - cat config.log
+        - cd  config.tests/x11/xlib/
+        - make
