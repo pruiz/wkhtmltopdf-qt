@@ -2,5 +2,5 @@ language: cpp
 compiler: gcc
 before_install: 
         - sudo apt-get update -qq
-        - sudo apt-get install perl "x11proto-*" libssl-dev
+        - sudo apt-get install perl "x11proto-*" libssl-dev "libx11-*"
 script: ./ci-build.sh
