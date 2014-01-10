@@ -3,4 +3,4 @@ compiler: gcc
 before_install: 
         - sudo apt-get update -qq
         - sudo apt-get install perl "x11proto-*" libssl-dev
-script: ci-build.sh
+script: ./ci-build.sh
