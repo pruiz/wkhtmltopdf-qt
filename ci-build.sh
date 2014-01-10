@@ -55,5 +55,5 @@ sed -i s/OPT_CONFIRM_LICENSE=no/OPT_CONFIRM_LICENSE=yes/g configure
 -openssl \
 -debug
 
-make -j 4
+make -j 4 > build.log
 
