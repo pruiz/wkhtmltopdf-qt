@@ -6,7 +6,7 @@ before_install:
         - sudo apt-get install xorg "x11proto-*" "libx11-*" "libglib*" "libgtk*"
         - sudo apt-get install libfontconfig1-dev libfreetype6-dev libx11-dev libxcursor-dev libxext-dev libxfixes-dev libxft-dev libxi-dev libxrandr-dev libxrender-dev
         - sudo apt-get install libqt4-dev qt4-dev-tools
-script: ./ci-build.sh
+script: sh -x ./ci-build.sh
 after_failure:
         - ls -l
         - cd  config.tests/x11/xlib/

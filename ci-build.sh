@@ -10,7 +10,7 @@ sed -i s/OPT_CONFIRM_LICENSE=no/OPT_CONFIRM_LICENSE=yes/g configure
 # Build shared libraries
 ./configure \
 -prefix $QTDIR \
--libdir$QT_LIBDIR \
+-libdir $QT_LIBDIR \
 -plugindir $QT_PLUGINDIR \
 -importdir $QT_IMPORTDIR \
 -opensource \
